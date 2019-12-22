@@ -19,7 +19,7 @@ namespace protect_inf_LR1
 
         private const int shiftKey = 2; //сдвиг ключа 
 
-        private const int quantityOfRounds = 16; //количество раундов
+        private const int quantityOfRounds = 6; //количество раундов
 
         string[] Blocks; //сами блоки в двоичном формате
 
@@ -50,7 +50,7 @@ namespace protect_inf_LR1
 
                 CutStringIntoBlocks(s);
 
-                key = CorrectKeyWord(key, s.Length / (2 * Blocks.Length));
+                key = CorrectKeyWord(key);
                 textBoxEncodeKeyWord.Text = key;
                 key = StringToBinaryFormat(key);
 
@@ -183,8 +183,9 @@ namespace protect_inf_LR1
         }
 
         //доводим длину ключа до нужной
-        private string CorrectKeyWord(string input, int lengthKey)
+        private string CorrectKeyWord(string input)
         {
+            int lengthKey = 128;
             if (input.Length > lengthKey)
                 input = input.Substring(0, lengthKey);
             else
@@ -281,11 +282,5 @@ namespace protect_inf_LR1
 
             return output;
         }
-
-
-
-
-
-
     }
 }
