@@ -21,6 +21,8 @@ namespace protect_inf_LR1
 
         private const int quantityOfRounds = 6; //количество раундов
 
+        private const string defaultKey = "1001000110100010101100111100010010000101010111100110111101111";
+
         string[] Blocks; //сами блоки в двоичном формате
 
         public Form1()
@@ -35,9 +37,14 @@ namespace protect_inf_LR1
             {
                 string s = "";
 
+                /*
+                    Получаем ключ из консоли, открываем файл, содержащий сообщение
+                    закодированное пишем в файл
+                */
+
                 string key = textBoxEncodeKeyWord.Text;
 
-                StreamReader sr = new StreamReader("in.txt");
+                StreamReader sr = new StreamReader("input.txt");
 
                 while (!sr.EndOfStream)
                 {
@@ -71,11 +78,11 @@ namespace protect_inf_LR1
                 for (int i = 0; i < Blocks.Length; i++)
                         result += Blocks[i];
 
-                StreamWriter sw = new StreamWriter("out1.txt");
+                StreamWriter sw = new StreamWriter("output.txt");
                 sw.WriteLine(StringFromBinaryToNormalFormat(result));
                 sw.Close();
 
-                Process.Start("out1.txt");
+                Process.Start("output.txt");
             }
             else
                 MessageBox.Show("Введите ключевое слово!");
@@ -90,7 +97,11 @@ namespace protect_inf_LR1
 
                 string key = StringToBinaryFormat(textBoxDecodeKeyWord.Text);
 
-                StreamReader sr = new StreamReader("out1.txt");
+                /*
+                    Прочитать из файла, задать 2 режима работы программы (зашифровать, расшифровать)
+                */
+
+                StreamReader sr = new StreamReader("output.txt");
 
                 while (!sr.EndOfStream)
                 {
@@ -120,11 +131,11 @@ namespace protect_inf_LR1
                 for (int i = 0; i < Blocks.Length; i++)
                     result += Blocks[i];
 
-                StreamWriter sw = new StreamWriter("out2.txt");
+                StreamWriter sw = new StreamWriter("output_decrypted.txt");
                 sw.WriteLine(StringFromBinaryToNormalFormat(result));
                 sw.Close();
 
-                Process.Start("out2.txt");
+                Process.Start("output_decrypted.txt");
             }
             else
                 MessageBox.Show("Введите ключевое слово!");
@@ -246,7 +257,7 @@ namespace protect_inf_LR1
                 key = key.Remove(key.Length - 1);
             }
 
-            return key;
+            return XOR(key, defaultKey);
         }
 
         //вычисление ключа для следующего раунда расшифровки. циклический сдвиг << 2
@@ -258,7 +269,7 @@ namespace protect_inf_LR1
                 key = key.Remove(0, 1);
             }
 
-            return key;
+            return XOR(defaultKey, key);
         }
 
         //переводим строку с двоичными данными в символьный формат
